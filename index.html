@@ -695,14 +695,29 @@
         margin-bottom: 8px;
       }
 
+      /* PRICES STYLING */
       .price {
-        font-size: 32px;
-        font-weight: 800;
-        color: var(--gold);
+        display: flex;
+        align-items: baseline;
+        gap: 10px;
+        flex-wrap: wrap;
         margin: 10px 0 18px;
       }
 
-      .price span {
+      .price-slashed {
+        font-size: 18px;
+        color: var(--text-gray);
+        text-decoration: line-through;
+        font-weight: 400;
+      }
+
+      .price-current {
+        font-size: 32px;
+        font-weight: 800;
+        color: var(--gold);
+      }
+
+      .price-current span {
         font-size: 14px;
         color: var(--text-gray);
         font-weight: 400;
@@ -1473,7 +1488,10 @@
 
           <span class="card-tag">Standard Tier</span>
           <h3>Normal Package</h3>
-          <div class="price">₹5,999 <span>Per Person</span></div>
+          <div class="price">
+            <span class="price-slashed">₹6,599</span>
+            <span class="price-current">₹5,999 <span>Per Person</span></span>
+          </div>
 
           <div class="package-details">
             <h4>✅ Inclusions</h4>
@@ -1547,7 +1565,10 @@
 
           <span class="card-tag">Signature Experience</span>
           <h3>VIP Premium Package</h3>
-          <div class="price">₹9,999 <span>Per Person</span></div>
+          <div class="price">
+            <span class="price-slashed">₹10,999</span>
+            <span class="price-current">₹9,999 <span>Per Person</span></span>
+          </div>
 
           <div class="package-details">
             <h4>✅ VIP Custom Perks</h4>
@@ -1618,7 +1639,10 @@
             <img src="assets/images/ramghat.jpg" alt="Ramghat" />
           </div>
           <h3>Standard Boat Ride</h3>
-          <div class="price">₹299 <span>Per Person</span></div>
+          <div class="price">
+            <span class="price-slashed">₹329</span>
+            <span class="price-current">₹299 <span>Per Person</span></span>
+          </div>
 
           <div class="package-details">
             <ul>
@@ -1652,7 +1676,10 @@
             <img src="assets/images/ramghat.jpg" alt="Ramghat VIP" />
           </div>
           <h3>VIP Private Boat</h3>
-          <div class="price">₹2,999 <span>Per Person</span></div>
+          <div class="price">
+            <span class="price-slashed">₹3,299</span>
+            <span class="price-current">₹2,999 <span>Per Person</span></span>
+          </div>
 
           <div class="package-details">
             <ul>
@@ -1701,7 +1728,10 @@
             <img src="assets/images/vipboat.jpeg" alt="Ramghat Celebration" />
           </div>
           <h3>Birthday Anniversaries</h3>
-          <div class="price">₹999 <span>/ 3 Hours</span></div>
+          <div class="price">
+            <span class="price-slashed">₹1,099</span>
+            <span class="price-current">₹999 <span>/ 3 Hours</span></span>
+          </div>
 
           <div class="package-details">
             <ul>
@@ -1735,7 +1765,10 @@
             <img src="assets/images/vipboat.jpeg" alt="Ramghat Shoot" />
           </div>
           <h3>Pre-Wedding Shoots</h3>
-          <div class="price">₹999 <span>/ 3 Hours</span></div>
+          <div class="price">
+            <span class="price-slashed">₹1,099</span>
+            <span class="price-current">₹999 <span>/ 3 Hours</span></span>
+          </div>
 
           <div class="package-details">
             <ul>
@@ -1777,7 +1810,10 @@
       <div class="cards-grid">
         <div class="card fade-in-section">
           <h3>Personal Guide</h3>
-          <div class="price">₹1,499 <span>/ Full Day</span></div>
+          <div class="price">
+            <span class="price-slashed">₹1,649</span>
+            <span class="price-current">₹1,499 <span>/ Full Day</span></span>
+          </div>
           <div class="package-details">
             <ul>
               <li>
@@ -1804,7 +1840,10 @@
 
         <div class="card vip fade-in-section">
           <h3>Group Guide</h3>
-          <div class="price">₹1,999 <span>/ Full Day</span></div>
+          <div class="price">
+            <span class="price-slashed">₹2,199</span>
+            <span class="price-current">₹1,999 <span>/ Full Day</span></span>
+          </div>
           <div class="package-details">
             <ul>
               <li>
