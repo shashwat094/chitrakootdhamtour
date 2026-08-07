@@ -29,7 +29,7 @@
     <link
         href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;0,700;1,400;1,600&family=Inter:wght@300;400;500;600;700&family=Outfit:wght@400;500;600;700;800&display=swap"
         rel="stylesheet">
-    <!-- Using Bootstrap Icons CDN - extremely reliable, no box issues -->
+    <!-- Bootstrap Icons CDN -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
     <!-- Breadcrumb structured data -->
     <script type="application/ld+json">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Home","item":"https://chitrakootdhamtour.in/"},{"@type":"ListItem","position":2,"name":"Tour Packages","item":"https://chitrakootdhamtour.in/#packages"},{"@type":"ListItem","position":3,"name":"Boat Tours","item":"https://chitrakootdhamtour.in/#boat"}]}</script>
@@ -214,8 +214,7 @@
         }
 
         /* ═══════════════════════════════════════════════
-   SITE HEADER — single fixed wrapper (topbar + nav stack
-   naturally, no hardcoded offsets = no gap, ever)
+   SITE HEADER
 ═══════════════════════════════════════════════ */
         .site-header {
             position: fixed;
@@ -1142,7 +1141,7 @@
             gap: 5px;
         }
 
-        /* SINGLE full-width image — no more clipped grid */
+        /* Full-width image */
         .pkg-img {
             position: relative;
             width: 100%;
@@ -2589,27 +2588,6 @@
         }
 
         /* ═══════════════════════════════════════════════
-   CURSOR GLOW (desktop, non-touch only)
-═══════════════════════════════════════════════ */
-        #curglow {
-            position: fixed;
-            width: 380px;
-            height: 380px;
-            border-radius: 50%;
-            background: radial-gradient(circle, var(--gd) 0%, transparent 70%);
-            pointer-events: none;
-            z-index: 3;
-            transform: translate(-50%, -50%);
-            opacity: 0;
-            transition: opacity .4s ease;
-            will-change: transform;
-        }
-
-        body.has-cursor #curglow {
-            opacity: 1;
-        }
-
-        /* ═══════════════════════════════════════════════
    MAGNETIC BUTTON WRAPPER
 ═══════════════════════════════════════════════ */
         .magnetic {
@@ -2842,9 +2820,6 @@
 
     <a href="#main" class="skip-link">Skip to main content</a>
 
-    <!-- cursor glow -->
-    <div id="curglow" aria-hidden="true"></div>
-
     <!-- particles -->
     <div class="ptcls">
         <span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></div>
@@ -2855,7 +2830,7 @@
     <!-- ═══════ LOADER ═══════ -->
     <div id="loader">
         <div class="ld-symbol">
-            <!-- Sun / spiritual SVG — no font dependency -->
+            <!-- Loader icon -->
             <svg viewBox="0 0 48 48" xmlns="http://www.w3.org/2000/svg">
                 <circle cx="24" cy="24" r="10" fill="#000" />
                 <g stroke="#000" stroke-width="2.5" stroke-linecap="round">
@@ -2877,7 +2852,7 @@
         </div>
     </div>
 
-    <!-- ═══════ HEADER (topbar + nav, single fixed unit — no gap) ═══════ -->
+    <!-- ═══════ HEADER ═══════ -->
     <header class="site-header" id="siteHeader">
         <div class="topbar">
             <div class="tb-i"><i class="bi bi-telephone-fill"></i> <span data-en="24×7: +91 9302720332"
@@ -4052,14 +4027,26 @@
         /* NAV SCROLL */
         const siteHeader = document.getElementById('siteHeader');
         const pgb = document.getElementById('pgbar');
+        let pageH = document.documentElement.scrollHeight - window.innerHeight;
+        let scrollTicking = false;
+        function updateScrollUI() {
+            const t = window.scrollY;
+            siteHeader.classList.toggle('scrolled', t > 60);
+            pgb.style.width = (pageH > 0 ? Math.min(t / pageH, 1) * 100 : 0) + '%';
+            scrollTicking = false;
+        }
         window.addEventListener('scroll', () => {
-            const scrolled = window.scrollY > 60;
-            siteHeader.classList.toggle('scrolled', scrolled);
-            const t = document.documentElement.scrollTop, h = document.documentElement.scrollHeight - window.innerHeight;
-            pgb.style.width = (t / h * 100) + '%';
+            if (!scrollTicking) {
+                requestAnimationFrame(updateScrollUI);
+                scrollTicking = true;
+            }
         }, { passive: true });
+        window.addEventListener('resize', () => {
+            pageH = document.documentElement.scrollHeight - window.innerHeight;
+        }, { passive: true });
+        updateScrollUI();
 
-        /* LANGUAGE SWITCH — EN / HI. Persists choice, swaps text + HTML nodes. */
+        /* LANGUAGE SWITCH — EN / HI */
         function setLang(lang) {
             document.querySelectorAll('[data-en]').forEach(el => { el.textContent = el.dataset[lang] || el.dataset.en; });
             document.querySelectorAll('[data-en-html]').forEach(el => { el.innerHTML = el.dataset[lang + 'Html'] || el.dataset.enHtml; });
@@ -4121,17 +4108,10 @@
             });
         });
 
-        /* CURSOR GLOW — desktop pointer only, respects reduced motion */
+        /* Reduced motion check */
         const prefersReduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-        const curglow = document.getElementById('curglow');
-        if (window.matchMedia('(pointer:fine)').matches && !prefersReduced) {
-            document.body.classList.add('has-cursor');
-            window.addEventListener('pointermove', e => {
-                curglow.style.transform = `translate(${e.clientX}px, ${e.clientY}px) translate(-50%,-50%)`;
-            }, { passive: true });
-        }
 
-        /* MAGNETIC BUTTONS — subtle pull toward cursor on hover */
+        /* MAGNETIC BUTTONS */
         if (window.matchMedia('(pointer:fine)').matches && !prefersReduced) {
             document.querySelectorAll('.btn').forEach(btn => {
                 btn.addEventListener('mousemove', e => {
@@ -4202,7 +4182,7 @@
         load();
     </script>
 
-    <!-- LENIS SMOOTH SCROLL (progressive enhancement — page works fully without it) -->
+    <!-- LENIS SMOOTH SCROLL -->
     <script src="https://cdn.jsdelivr.net/npm/lenis@1.1.14/dist/lenis.min.js" defer></script>
     <script defer>
         window.addEventListener('load', () => {
