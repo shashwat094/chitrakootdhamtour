@@ -23,11 +23,18 @@
         type="application/ld+json">{"@context":"https://schema.org","@type":"TravelAgency","name":"ChitrakootDhamTour","url":"https://chitrakootdhamtour.in","logo":"https://chitrakootdhamtour.in/assets/images/logo.png","description":"Premium Chitrakoot tour services with VIP darshan and luxury stay.","telephone":"+91 9302720332","address":{"@type":"PostalAddress","addressLocality":"Chitrakoot","addressCountry":"India"}}</script>
     <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-6041372146127557"
         crossorigin="anonymous"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
     <link
-        href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;0,700;1,400;1,600&family=Inter:wght@300;400;500;600;700&display=swap"
+        href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;0,700;1,400;1,600&family=Inter:wght@300;400;500;600;700&family=Outfit:wght@400;500;600;700;800&display=swap"
         rel="stylesheet">
     <!-- Using Bootstrap Icons CDN - extremely reliable, no box issues -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+    <!-- Breadcrumb structured data -->
+    <script type="application/ld+json">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Home","item":"https://chitrakootdhamtour.in/"},{"@type":"ListItem","position":2,"name":"Tour Packages","item":"https://chitrakootdhamtour.in/#packages"},{"@type":"ListItem","position":3,"name":"Boat Tours","item":"https://chitrakootdhamtour.in/#boat"}]}</script>
+    <!-- FAQ structured data -->
+    <script type="application/ld+json">{"@context":"https://schema.org","@type":"FAQPage","mainEntity":[{"@type":"Question","name":"Is VIP Darshan included in the packages?","acceptedAnswer":{"@type":"Answer","text":"Yes. The VIP package includes priority darshan assistance at all major temples, so you skip long queues and get a personal, peaceful darshan experience."}},{"@type":"Question","name":"Are meals included in the tour packages?","acceptedAnswer":{"@type":"Answer","text":"Yes. The Normal Package includes lunch and dinner, the VIP Package includes all three meals, and the Boat Tour includes evening lunch and tea. All meals are authentic vegetarian."}},{"@type":"Question","name":"Can families and senior citizens book?","acceptedAnswer":{"@type":"Answer","text":"Absolutely. All packages are family-friendly and designed for pilgrims of all ages, with comfortable pacing and transport for senior citizens."}},{"@type":"Question","name":"How do I confirm my booking?","acceptedAnswer":{"@type":"Answer","text":"WhatsApp us with your preferred package and travel date. A Rs.99 pre-booking charge confirms your slot, with the remaining payment due before the tour starts."}}]}</script>
 
     <style>
         /* ═══════════════════════════════════════════════
@@ -207,14 +214,22 @@
         }
 
         /* ═══════════════════════════════════════════════
-   TOP BAR
+   SITE HEADER — single fixed wrapper (topbar + nav stack
+   naturally, no hardcoded offsets = no gap, ever)
 ═══════════════════════════════════════════════ */
-        .topbar {
+        .site-header {
             position: fixed;
             top: 0;
             left: 0;
             width: 100%;
             z-index: 3000;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .topbar {
+            width: 100%;
+            z-index: 3001;
             background: #0a0500;
             border-bottom: 1px solid rgba(201, 168, 76, .2);
             padding: 6px 5%;
@@ -222,6 +237,19 @@
             align-items: center;
             justify-content: center;
             gap: 0;
+            overflow: hidden;
+            max-height: 40px;
+            opacity: 1;
+            transition: max-height .45s cubic-bezier(.4, 0, .2, 1), padding .45s ease, opacity .3s ease, border-color .3s ease;
+        }
+
+        .site-header.scrolled .topbar {
+            max-height: 0;
+            padding-top: 0;
+            padding-bottom: 0;
+            opacity: 0;
+            border-bottom-color: transparent;
+            pointer-events: none;
         }
 
         .tb-i {
@@ -244,6 +272,34 @@
             font-size: 13px;
         }
 
+        .lang-switch {
+            display: flex;
+            align-items: center;
+            gap: 4px;
+            margin-left: 20px;
+            padding-left: 20px;
+            border-left: 1px solid rgba(201, 168, 76, .25);
+        }
+
+        .lang-btn {
+            font-size: 11px;
+            font-weight: 700;
+            letter-spacing: .5px;
+            color: var(--mu);
+            padding: 2px 8px;
+            border-radius: 6px;
+            transition: var(--tr);
+        }
+
+        .lang-btn.on {
+            color: #000;
+            background: linear-gradient(120deg, var(--g), var(--gs));
+        }
+
+        .lang-btn:not(.on):hover {
+            color: var(--g2);
+        }
+
         @media(max-width:640px) {
             .tb-i:not(:first-child) {
                 display: none;
@@ -260,15 +316,18 @@
             .tb-i {
                 font-size: 11.5px;
             }
+
+            .lang-switch {
+                margin-left: 12px;
+                padding-left: 12px;
+            }
         }
 
         /* ═══════════════════════════════════════════════
    NAVBAR
 ═══════════════════════════════════════════════ */
         .nav {
-            position: fixed;
-            top: 33px;
-            left: 0;
+            position: relative;
             width: 100%;
             z-index: 2000;
             padding: 12px 5%;
@@ -282,10 +341,11 @@
             transition: var(--tr);
         }
 
-        .nav.stuck {
+        .site-header.scrolled .nav {
             background: rgba(5, 5, 5, .98);
             box-shadow: 0 4px 40px rgba(0, 0, 0, .7);
             border-bottom-color: rgba(201, 168, 76, .12);
+            padding: 9px 5%;
         }
 
         .brand {
@@ -302,6 +362,12 @@
             object-fit: cover;
             border: 2px solid var(--g);
             box-shadow: 0 0 16px var(--gd);
+            transition: var(--tr);
+        }
+
+        .site-header.scrolled .brand img {
+            width: 34px;
+            height: 34px;
         }
 
         .brand-name {
@@ -325,18 +391,40 @@
             gap: 22px;
         }
 
-        .navlinks a {
+        .navlinks a:not(.nav-book) {
+            position: relative;
             font-size: 13px;
             font-weight: 500;
             color: #bbb;
+            padding-bottom: 3px;
             transition: color var(--tr);
         }
 
-        .navlinks a:hover {
-            color: var(--g);
+        .navlinks a:not(.nav-book)::after {
+            content: '';
+            position: absolute;
+            left: 0;
+            bottom: 0;
+            width: 100%;
+            height: 1.5px;
+            background: linear-gradient(90deg, var(--g), var(--gs));
+            transform: scaleX(0);
+            transform-origin: right;
+            transition: transform .35s cubic-bezier(.4, 0, .2, 1);
+        }
+
+        .navlinks a:not(.nav-book):hover {
+            color: var(--g2);
+        }
+
+        .navlinks a:not(.nav-book):hover::after {
+            transform: scaleX(1);
+            transform-origin: left;
         }
 
         .nav-book {
+            position: relative;
+            overflow: hidden;
             padding: 8px 18px;
             background: linear-gradient(135deg, var(--g), var(--gs));
             color: #000 !important;
@@ -348,6 +436,19 @@
             gap: 6px;
             transition: var(--tr);
             box-shadow: 0 3px 18px var(--gd);
+        }
+
+        .nav-book::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(115deg, transparent 30%, rgba(255, 255, 255, .55) 48%, transparent 66%);
+            transform: translateX(-120%);
+        }
+
+        .nav-book:hover::before {
+            transform: translateX(120%);
+            transition: transform .75s ease;
         }
 
         .nav-book:hover {
@@ -933,6 +1034,13 @@
             align-items: center;
             text-align: center;
             gap: 14px;
+            padding: 10px;
+            border-radius: var(--rm);
+            transition: transform .4s cubic-bezier(.4, 0, .2, 1);
+        }
+
+        .feat-card:hover {
+            transform: translateY(-6px);
         }
 
         .feat-ic {
@@ -952,7 +1060,7 @@
 
         .feat-card:hover .feat-ic {
             background: rgba(201, 168, 76, .18);
-            transform: translateY(-5px);
+            transform: translateY(-5px) rotate(-6deg) scale(1.06);
             box-shadow: 0 14px 32px var(--gd);
         }
 
@@ -2437,17 +2545,312 @@
         #lb-x:hover {
             opacity: 1;
         }
+        /* ═══════════════════════════════════════════════
+   ACCESSIBILITY — focus states + reduced motion
+═══════════════════════════════════════════════ */
+        a:focus-visible,
+        button:focus-visible,
+        input:focus-visible,
+        textarea:focus-visible,
+        select:focus-visible {
+            outline: 2px solid var(--g2);
+            outline-offset: 3px;
+            border-radius: 4px;
+        }
+
+        .skip-link {
+            position: absolute;
+            top: -60px;
+            left: 12px;
+            background: var(--g);
+            color: #000;
+            padding: 10px 18px;
+            border-radius: var(--rs);
+            z-index: 10000;
+            font-weight: 600;
+            font-size: 13px;
+            transition: top .25s ease;
+        }
+
+        .skip-link:focus {
+            top: 12px;
+        }
+
+        @media (prefers-reduced-motion: reduce) {
+
+            *,
+            *::before,
+            *::after {
+                animation-duration: .001ms !important;
+                animation-iteration-count: 1 !important;
+                transition-duration: .001ms !important;
+                scroll-behavior: auto !important;
+            }
+        }
+
+        /* ═══════════════════════════════════════════════
+   CURSOR GLOW (desktop, non-touch only)
+═══════════════════════════════════════════════ */
+        #curglow {
+            position: fixed;
+            width: 380px;
+            height: 380px;
+            border-radius: 50%;
+            background: radial-gradient(circle, var(--gd) 0%, transparent 70%);
+            pointer-events: none;
+            z-index: 3;
+            transform: translate(-50%, -50%);
+            opacity: 0;
+            transition: opacity .4s ease;
+            will-change: transform;
+        }
+
+        body.has-cursor #curglow {
+            opacity: 1;
+        }
+
+        /* ═══════════════════════════════════════════════
+   MAGNETIC BUTTON WRAPPER
+═══════════════════════════════════════════════ */
+        .magnetic {
+            display: inline-block;
+            transition: transform .25s cubic-bezier(.34, 1.56, .64, 1);
+        }
+
+        /* ═══════════════════════════════════════════════
+   GALLERY
+═══════════════════════════════════════════════ */
+        .gal-filters {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 10px;
+            margin: 0 auto 40px;
+        }
+
+        .gal-f {
+            padding: 9px 20px;
+            border-radius: 99px;
+            border: 1px solid rgba(255, 255, 255, .12);
+            background: rgba(255, 255, 255, .03);
+            color: var(--li);
+            font-size: 13px;
+            font-weight: 500;
+            letter-spacing: .3px;
+            transition: var(--tr);
+        }
+
+        .gal-f:hover {
+            border-color: var(--gg);
+            color: var(--g2);
+        }
+
+        .gal-f.on {
+            background: linear-gradient(120deg, var(--g), var(--gs));
+            border-color: transparent;
+            color: #0a0a0a;
+            font-weight: 600;
+        }
+
+        .gal-grid {
+            columns: 4 220px;
+            column-gap: 14px;
+            padding: 0 6%;
+        }
+
+        @media (max-width:900px) {
+            .gal-grid {
+                columns: 2 200px;
+            }
+        }
+
+        @media (max-width:520px) {
+            .gal-grid {
+                columns: 1;
+            }
+        }
+
+        .gal-item {
+            position: relative;
+            break-inside: avoid;
+            margin-bottom: 14px;
+            border-radius: var(--rm);
+            overflow: hidden;
+            cursor: pointer;
+            border: 1px solid rgba(255, 255, 255, .06);
+        }
+
+        .gal-item img {
+            width: 100%;
+            display: block;
+            transition: transform .6s cubic-bezier(.4, 0, .2, 1), filter .5s ease;
+        }
+
+        .gal-item:hover img {
+            transform: scale(1.08);
+            filter: brightness(1.05);
+        }
+
+        .gal-cap {
+            position: absolute;
+            inset: auto 0 0 0;
+            padding: 16px 14px 12px;
+            background: linear-gradient(0deg, rgba(0, 0, 0, .88) 0%, transparent 100%);
+            opacity: 0;
+            transform: translateY(8px);
+            transition: var(--tr);
+        }
+
+        .gal-item:hover .gal-cap {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .gal-cap-t {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 18px;
+            color: var(--g2);
+        }
+
+        .gal-cap-s {
+            font-size: 11px;
+            color: var(--mu);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .gal-item[data-cat] {
+            display: block;
+        }
+
+        .gal-item.hide {
+            display: none;
+        }
+
+        /* ═══════════════════════════════════════════════
+   TIMELINE
+═══════════════════════════════════════════════ */
+        .tl-wrap {
+            max-width: 760px;
+            margin: 0 auto;
+            padding: 0 6%;
+            position: relative;
+        }
+
+        .tl-wrap::before {
+            content: '';
+            position: absolute;
+            left: 31px;
+            top: 8px;
+            bottom: 8px;
+            width: 2px;
+            background: linear-gradient(180deg, var(--g) 0%, var(--gg) 50%, transparent 100%);
+        }
+
+        @media (max-width:640px) {
+            .tl-wrap::before {
+                left: 23px;
+            }
+        }
+
+        .tl-item {
+            position: relative;
+            padding: 0 0 46px 78px;
+        }
+
+        @media (max-width:640px) {
+            .tl-item {
+                padding-left: 58px;
+            }
+        }
+
+        .tl-item:last-child {
+            padding-bottom: 0;
+        }
+
+        .tl-ic {
+            position: absolute;
+            left: 0;
+            top: 0;
+            width: 64px;
+            height: 64px;
+            border-radius: 50%;
+            background: var(--d3);
+            border: 1px solid var(--gg);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 22px;
+            color: var(--g);
+            box-shadow: 0 0 0 6px var(--d), 0 8px 24px rgba(0, 0, 0, .4);
+            transition: var(--tr);
+        }
+
+        @media (max-width:640px) {
+            .tl-ic {
+                width: 48px;
+                height: 48px;
+                font-size: 17px;
+            }
+        }
+
+        .tl-card {
+            background: linear-gradient(160deg, rgba(255, 255, 255, .035), rgba(255, 255, 255, .01));
+            border: 1px solid rgba(255, 255, 255, .07);
+            border-radius: var(--rm);
+            padding: 20px 22px;
+            transition: var(--tr);
+        }
+
+        .tl-item:hover .tl-card {
+            border-color: var(--gg);
+            transform: translateX(4px);
+            box-shadow: 0 12px 30px rgba(0, 0, 0, .3);
+        }
+
+        .tl-item:hover .tl-ic {
+            border-color: var(--g);
+            color: var(--g2);
+            transform: scale(1.08);
+        }
+
+        .tl-time {
+            font-size: 11px;
+            letter-spacing: 1.5px;
+            text-transform: uppercase;
+            color: var(--gs);
+            font-weight: 600;
+            margin-bottom: 6px;
+        }
+
+        .tl-ttl {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 22px;
+            color: var(--wh);
+            margin-bottom: 6px;
+        }
+
+        .tl-txt {
+            font-size: 14.5px;
+            color: var(--li);
+            line-height: 1.7;
+        }
     </style>
 </head>
 
 <body>
+
+    <a href="#main" class="skip-link">Skip to main content</a>
+
+    <!-- cursor glow -->
+    <div id="curglow" aria-hidden="true"></div>
 
     <!-- particles -->
     <div class="ptcls">
         <span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></div>
 
     <!-- progress -->
-    <div id="pgbar"></div>
+    <div id="pgbar" role="progressbar" aria-label="Page scroll progress"></div>
 
     <!-- ═══════ LOADER ═══════ -->
     <div id="loader">
@@ -2474,35 +2877,47 @@
         </div>
     </div>
 
-    <!-- ═══════ TOP BAR ═══════ -->
-    <div class="topbar">
-        <div class="tb-i"><i class="bi bi-telephone-fill"></i> 24&times;7: +91&nbsp;9302720332</div>
-        <div class="tb-div">|</div>
-        <div class="tb-i"><i class="bi bi-tag-fill"></i> First Booking — Flat 10% Off</div>
-        <div class="tb-div">|</div>
-        <div class="tb-i"><i class="bi bi-geo-alt-fill"></i> Chitrakoot, India</div>
-    </div>
-
-    <!-- ═══════ NAVBAR ═══════ -->
-    <nav class="nav" id="nav">
-        <div class="brand">
-            <img src="assets/images/logo.png" alt="ChitrakootDhamTour">
-            <div>
-                <div class="brand-name">ChitrakootDhamTour</div>
-                <div class="brand-tag">Divine Spiritual Journeys</div>
+    <!-- ═══════ HEADER (topbar + nav, single fixed unit — no gap) ═══════ -->
+    <header class="site-header" id="siteHeader">
+        <div class="topbar">
+            <div class="tb-i"><i class="bi bi-telephone-fill"></i> <span data-en="24×7: +91 9302720332"
+                    data-hi="24×7: +91 9302720332">24&times;7: +91&nbsp;9302720332</span></div>
+            <div class="tb-div">|</div>
+            <div class="tb-i"><i class="bi bi-tag-fill"></i> <span data-en="First Booking — Flat 10% Off"
+                    data-hi="पहली बुकिंग पर 10% छूट">First Booking — Flat 10% Off</span></div>
+            <div class="tb-div">|</div>
+            <div class="tb-i"><i class="bi bi-geo-alt-fill"></i> <span data-en="Chitrakoot, India"
+                    data-hi="चित्रकूट, भारत">Chitrakoot, India</span></div>
+            <div class="lang-switch" role="group" aria-label="Choose language">
+                <button class="lang-btn on" id="langEn" onclick="setLang('en')">EN</button>
+                <button class="lang-btn" id="langHi" onclick="setLang('hi')">हिं</button>
             </div>
         </div>
-        <div class="navlinks">
-            <a href="#">Home</a>
-            <a href="#packages">Packages</a>
-            <a href="#places">Places</a>
-            <a href="#boat">Boat Tour</a>
-            <a href="#reviews">Reviews</a>
-            <a href="#contact">Contact</a>
-            <a href="https://wa.me/919302720332" class="nav-book"><i class="bi bi-whatsapp"></i> Book Now</a>
-        </div>
-        <button class="hamburger" id="ham" aria-label="Menu"><span></span><span></span><span></span></button>
-    </nav>
+
+        <!-- ═══════ NAVBAR ═══════ -->
+        <nav class="nav" id="nav">
+            <div class="brand">
+                <img src="assets/images/logo.png" alt="ChitrakootDhamTour">
+                <div>
+                    <div class="brand-name">ChitrakootDhamTour</div>
+                    <div class="brand-tag" data-en="Divine Spiritual Journeys" data-hi="दिव्य आध्यात्मिक यात्रा">Divine
+                        Spiritual Journeys</div>
+                </div>
+            </div>
+            <div class="navlinks">
+                <a href="#" data-en="Home" data-hi="होम">Home</a>
+                <a href="#packages" data-en="Packages" data-hi="पैकेज">Packages</a>
+                <a href="#places" data-en="Places" data-hi="स्थान">Places</a>
+                <a href="#gallery" data-en="Gallery" data-hi="गैलरी">Gallery</a>
+                <a href="#boat" data-en="Boat Tour" data-hi="बोट टूर">Boat Tour</a>
+                <a href="#reviews" data-en="Reviews" data-hi="समीक्षा">Reviews</a>
+                <a href="#contact" data-en="Contact" data-hi="संपर्क">Contact</a>
+                <a href="https://wa.me/919302720332" class="nav-book"><i class="bi bi-whatsapp"></i> <span
+                        data-en="Book Now" data-hi="अभी बुक करें">Book Now</span></a>
+            </div>
+            <button class="hamburger" id="ham" aria-label="Menu"><span></span><span></span><span></span></button>
+        </nav>
+    </header>
 
     <!-- ═══════ DRAWER ═══════ -->
     <div class="overlay" id="ov"></div>
@@ -2516,55 +2931,71 @@
             <button class="drw-close" id="drw-x"><i class="bi bi-x-lg"></i></button>
         </div>
         <nav class="drw-nav">
-            <a href="#" onclick="cd()"><i class="bi bi-house-fill"></i> Home</a>
-            <a href="#packages" onclick="cd()"><i class="bi bi-box-seam-fill"></i> Packages</a>
-            <a href="#places" onclick="cd()"><i class="bi bi-map-fill"></i> Sacred Places</a>
-            <a href="#boat" onclick="cd()"><i class="bi bi-water"></i> Boat Tour</a>
-            <a href="#celebration" onclick="cd()"><i class="bi bi-balloon-heart-fill"></i> Celebrations</a>
-            <a href="#guide" onclick="cd()"><i class="bi bi-person-walking"></i> Tour Guide</a>
-            <a href="#reviews" onclick="cd()"><i class="bi bi-star-fill"></i> Reviews</a>
-            <a href="#contact" onclick="cd()"><i class="bi bi-envelope-fill"></i> Contact</a>
+            <a href="#" onclick="cd()"><i class="bi bi-house-fill"></i> <span data-en="Home" data-hi="होम">Home</span></a>
+            <a href="#packages" onclick="cd()"><i class="bi bi-box-seam-fill"></i> <span data-en="Packages"
+                    data-hi="पैकेज">Packages</span></a>
+            <a href="#places" onclick="cd()"><i class="bi bi-map-fill"></i> <span data-en="Sacred Places"
+                    data-hi="पवित्र स्थान">Sacred Places</span></a>
+            <a href="#gallery" onclick="cd()"><i class="bi bi-images"></i> <span data-en="Gallery"
+                    data-hi="गैलरी">Gallery</span></a>
+            <a href="#boat" onclick="cd()"><i class="bi bi-water"></i> <span data-en="Boat Tour"
+                    data-hi="बोट टूर">Boat Tour</span></a>
+            <a href="#celebration" onclick="cd()"><i class="bi bi-balloon-heart-fill"></i> <span data-en="Celebrations"
+                    data-hi="उत्सव">Celebrations</span></a>
+            <a href="#guide" onclick="cd()"><i class="bi bi-person-walking"></i> <span data-en="Tour Guide"
+                    data-hi="टूर गाइड">Tour Guide</span></a>
+            <a href="#reviews" onclick="cd()"><i class="bi bi-star-fill"></i> <span data-en="Reviews"
+                    data-hi="समीक्षा">Reviews</span></a>
+            <a href="#contact" onclick="cd()"><i class="bi bi-envelope-fill"></i> <span data-en="Contact"
+                    data-hi="संपर्क">Contact</span></a>
         </nav>
         <div class="drw-foot">
             <a href="https://wa.me/919302720332" class="btn btn-wa btn-full" onclick="cd()"><i
-                    class="bi bi-whatsapp"></i> Book on WhatsApp</a>
+                    class="bi bi-whatsapp"></i> <span data-en="Book on WhatsApp" data-hi="व्हाट्सएप पर बुक करें">Book on WhatsApp</span></a>
         </div>
     </div>
 
     <!-- ════════════════════════════════════════════
      HERO
 ════════════════════════════════════════════ -->
-    <section class="hero">
+    <section class="hero" id="main">
         <div class="hero-bg"></div>
         <div class="hero-orb"></div>
         <div class="hero-content">
-            <div class="hero-eyebrow"><i class="bi bi-shield-check-fill"></i>&nbsp; India's Trusted Chitrakoot Tour
-                Service</div>
-            <h1 class="serif">Experience Divine<br><em>Chitrakoot</em> Like Never Before</h1>
-            <p class="hero-sub">From budget pilgrimages to luxury VIP darshan — sacred temples,<br> serene boat rides
+            <div class="hero-eyebrow"><i class="bi bi-shield-check-fill"></i>&nbsp;<span
+                    data-en="India's Trusted Chitrakoot Tour Service" data-hi="भारत की भरोसेमंद चित्रकूट टूर सेवा">India's
+                    Trusted Chitrakoot Tour
+                Service</span></div>
+            <h1 class="serif" data-en-html="Experience Divine<br><em>Chitrakoot</em> Like Never Before"
+                data-hi-html="दिव्य <em>चित्रकूट</em> का अनुभव<br>जैसा पहले कभी नहीं">Experience Divine<br><em>Chitrakoot</em> Like Never Before</h1>
+            <p class="hero-sub" data-en-html="From budget pilgrimages to luxury VIP darshan — sacred temples,<br> serene boat rides &amp; unforgettable evening aartis await you."
+                data-hi-html="बजट यात्रा से लेकर लक्जरी VIP दर्शन तक — पवित्र मंदिर,<br> शांत नाव यात्रा और अविस्मरणीय संध्या आरती आपका इंतज़ार कर रही है।">From
+                budget pilgrimages to luxury VIP darshan — sacred temples,<br> serene boat rides
                 &amp; unforgettable evening aartis await you.</p>
             <div class="hero-stats rv">
                 <div class="hstat">
                     <div class="hstat-n">500+</div>
-                    <div class="hstat-l">Happy Pilgrims</div>
+                    <div class="hstat-l" data-en="Happy Pilgrims" data-hi="खुश यात्री">Happy Pilgrims</div>
                 </div>
                 <div class="hstat">
                     <div class="hstat-n">8</div>
-                    <div class="hstat-l">Sacred Sites</div>
+                    <div class="hstat-l" data-en="Sacred Sites" data-hi="पवित्र स्थल">Sacred Sites</div>
                 </div>
                 <div class="hstat">
                     <div class="hstat-n">24×7</div>
-                    <div class="hstat-l">Support</div>
+                    <div class="hstat-l" data-en="Support" data-hi="सहायता">Support</div>
                 </div>
                 <div class="hstat">
                     <div class="hstat-n">5★</div>
-                    <div class="hstat-l">Rated Service</div>
+                    <div class="hstat-l" data-en="Rated Service" data-hi="रेटेड सेवा">Rated Service</div>
                 </div>
             </div>
             <div class="hero-btns rv">
-                <a href="#packages" class="btn btn-gold"><i class="bi bi-compass-fill"></i> Explore Packages</a>
-                <a href="https://wa.me/919302720332" class="btn btn-ghost"><i class="bi bi-whatsapp"></i> Book on
-                    WhatsApp</a>
+                <a href="#packages" class="btn btn-gold"><i class="bi bi-compass-fill"></i> <span data-en="Explore Packages"
+                        data-hi="पैकेज देखें">Explore Packages</span></a>
+                <a href="https://wa.me/919302720332" class="btn btn-ghost"><i class="bi bi-whatsapp"></i> <span
+                        data-en="Book on WhatsApp" data-hi="व्हाट्सएप पर बुक करें">Book on
+                    WhatsApp</span></a>
             </div>
             <div class="hero-trust rv">
                 <div class="avs">
@@ -2573,10 +3004,12 @@
                     <div class="av">M</div>
                     <div class="av">A</div>
                 </div>
-                <span>Trusted by 500+ pilgrims from across India</span>
+                <span data-en="Trusted by 500+ pilgrims from across India"
+                    data-hi="पूरे भारत से 500+ यात्रियों का भरोसा">Trusted by 500+ pilgrims from across India</span>
             </div>
         </div>
-        <div class="scroll-hint"><span>Scroll</span><i class="bi bi-chevron-double-down"></i></div>
+        <div class="scroll-hint"><span data-en="Scroll" data-hi="स्क्रॉल करें">Scroll</span><i
+                class="bi bi-chevron-double-down"></i></div>
     </section>
 
     <!-- MARQUEE -->
@@ -2915,6 +3348,97 @@
     </section>
 
     <!-- ════════════════════════════════════════════
+     GALLERY
+════════════════════════════════════════════ -->
+    <section class="sec sec-alt" id="gallery">
+        <div class="sec-head mid">
+            <div class="eyebrow rv">Visual Journey</div>
+            <h2 class="sec-title rv">Chitrakoot <span class="acc">Gallery</span></h2>
+            <div class="divider mid rv"></div>
+            <p class="sec-body rv" style="margin-top:14px;">A glimpse of the temples, ghats, hotels and boats that
+                make every Chitrakoot journey unforgettable.</p>
+        </div>
+        <div class="gal-filters rv" role="tablist" aria-label="Filter gallery by category">
+            <button class="gal-f on" data-f="all" role="tab" aria-selected="true">All</button>
+            <button class="gal-f" data-f="temples" role="tab" aria-selected="false">Temples</button>
+            <button class="gal-f" data-f="river" role="tab" aria-selected="false">River &amp; Boats</button>
+            <button class="gal-f" data-f="stay" role="tab" aria-selected="false">Hotels</button>
+        </div>
+        <div class="gal-grid rv" id="galGrid">
+            <div class="gal-item" data-cat="temples" onclick="openLb('assets/images/kamadgiri.jpg')">
+                <img src="assets/images/kamadgiri.jpg" alt="Kamadgiri sacred mountain" loading="lazy">
+                <div class="gal-cap">
+                    <div class="gal-cap-t">Kamadgiri</div>
+                    <div class="gal-cap-s">Temple</div>
+                </div>
+            </div>
+            <div class="gal-item" data-cat="river" onclick="openLb('assets/images/ramghat.jpg')">
+                <img src="assets/images/ramghat.jpg" alt="Ramghat on the Mandakini river" loading="lazy">
+                <div class="gal-cap">
+                    <div class="gal-cap-t">Ramghat</div>
+                    <div class="gal-cap-s">River</div>
+                </div>
+            </div>
+            <div class="gal-item" data-cat="temples" onclick="openLb('assets/images/hanuman.jpg')">
+                <img src="assets/images/hanuman.jpg" alt="Hanuman Dhara sacred stream" loading="lazy">
+                <div class="gal-cap">
+                    <div class="gal-cap-t">Hanuman Dhara</div>
+                    <div class="gal-cap-s">Temple</div>
+                </div>
+            </div>
+            <div class="gal-item" data-cat="river" onclick="openLb('assets/images/boat-aarti.jpg')">
+                <img src="assets/images/boat-aarti.jpg" alt="Evening aarti boat tour at Ramghat" loading="lazy">
+                <div class="gal-cap">
+                    <div class="gal-cap-t">Evening Aarti Boat</div>
+                    <div class="gal-cap-s">River</div>
+                </div>
+            </div>
+            <div class="gal-item" data-cat="temples" onclick="openLb('assets/images/gupt.jpg')">
+                <img src="assets/images/gupt.jpg" alt="Gupt Godawari cave temples" loading="lazy">
+                <div class="gal-cap">
+                    <div class="gal-cap-t">Gupt Godawari</div>
+                    <div class="gal-cap-s">Temple</div>
+                </div>
+            </div>
+            <div class="gal-item" data-cat="stay" onclick="openLb('assets/images/viphotel.jpg')">
+                <img src="assets/images/viphotel.jpg" alt="VIP luxury hotel stay" loading="lazy">
+                <div class="gal-cap">
+                    <div class="gal-cap-t">VIP Hotel Stay</div>
+                    <div class="gal-cap-s">Hotel</div>
+                </div>
+            </div>
+            <div class="gal-item" data-cat="temples" onclick="openLb('assets/images/sati.jpg')">
+                <img src="assets/images/sati.jpg" alt="Sati Anusuya ashram" loading="lazy">
+                <div class="gal-cap">
+                    <div class="gal-cap-t">Sati Anusuya</div>
+                    <div class="gal-cap-s">Temple</div>
+                </div>
+            </div>
+            <div class="gal-item" data-cat="river" onclick="openLb('assets/images/vipboat.jpeg')">
+                <img src="assets/images/vipboat.jpeg" alt="VIP private boat on the Mandakini" loading="lazy">
+                <div class="gal-cap">
+                    <div class="gal-cap-t">VIP Private Boat</div>
+                    <div class="gal-cap-s">River</div>
+                </div>
+            </div>
+            <div class="gal-item" data-cat="temples" onclick="openLb('assets/images/janki.jpg')">
+                <img src="assets/images/janki.jpg" alt="Janki Kund sacred bathing spot" loading="lazy">
+                <div class="gal-cap">
+                    <div class="gal-cap-t">Janki Kund</div>
+                    <div class="gal-cap-s">Temple</div>
+                </div>
+            </div>
+            <div class="gal-item" data-cat="stay" onclick="openLb('assets/images/hotel1.jpg')">
+                <img src="assets/images/hotel1.jpg" alt="Normal package hotel stay" loading="lazy">
+                <div class="gal-cap">
+                    <div class="gal-cap-t">Comfort Hotel Stay</div>
+                    <div class="gal-cap-s">Hotel</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ════════════════════════════════════════════
      STATS
 ════════════════════════════════════════════ -->
     <div class="stats-wrap">
@@ -3003,6 +3527,75 @@
                     <div class="rule"></div>
                     <a href="https://wa.me/919302720332?text=Hello, I want to book VIP Boat Tour Rs.2999"
                         class="btn btn-gold btn-full"><i class="bi bi-whatsapp"></i> Book VIP Boat Tour</a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ════════════════════════════════════════════
+     TIMELINE — your journey experience
+════════════════════════════════════════════ -->
+    <section class="sec" id="timeline">
+        <div class="sec-head mid">
+            <div class="eyebrow rv">How It Works</div>
+            <h2 class="sec-title rv">Your <span class="acc">Journey Timeline</span></h2>
+            <div class="divider mid rv"></div>
+            <p class="sec-body rv" style="margin-top:14px;">From the moment you arrive to the moment you leave —
+                here's exactly how a Chitrakoot pilgrimage with us unfolds.</p>
+        </div>
+        <div class="tl-wrap">
+            <div class="tl-item rv">
+                <div class="tl-ic"><i class="bi bi-train-front-fill"></i></div>
+                <div class="tl-card">
+                    <div class="tl-time">Step 1 · On Arrival</div>
+                    <div class="tl-ttl">Railway Station Pickup</div>
+                    <div class="tl-txt">We receive you at Chitrakoot/Karwi railway station and transfer you
+                        directly to your hotel in a comfortable AC vehicle.</div>
+                </div>
+            </div>
+            <div class="tl-item rv d1">
+                <div class="tl-ic"><i class="bi bi-building"></i></div>
+                <div class="tl-card">
+                    <div class="tl-time">Step 2 · Check-In</div>
+                    <div class="tl-ttl">Hotel Check-In &amp; Rest</div>
+                    <div class="tl-txt">Settle into your AC room — Normal or Luxury Deluxe depending on your
+                        package — and freshen up before darshan begins.</div>
+                </div>
+            </div>
+            <div class="tl-item rv d2">
+                <div class="tl-ic"><i class="bi bi-buildings-fill"></i></div>
+                <div class="tl-card">
+                    <div class="tl-time">Step 3 · Sightseeing</div>
+                    <div class="tl-ttl">Guided Temple Darshan</div>
+                    <div class="tl-txt">Visit sacred sites — Kamadgiri, Gupt Godawari, Hanuman Dhara and more —
+                        with an experienced guide who explains every story behind the stone.</div>
+                </div>
+            </div>
+            <div class="tl-item rv d3">
+                <div class="tl-ic"><i class="bi bi-water"></i></div>
+                <div class="tl-card">
+                    <div class="tl-time">Step 4 · Golden Hour</div>
+                    <div class="tl-ttl">Ramghat Boat Ride &amp; Evening Aarti</div>
+                    <div class="tl-txt">Drift along the Mandakini as the sun sets, then witness the spiritually
+                        charged evening aarti at Ramghat.</div>
+                </div>
+            </div>
+            <div class="tl-item rv">
+                <div class="tl-ic"><i class="bi bi-egg-fried"></i></div>
+                <div class="tl-card">
+                    <div class="tl-time">Step 5 · Meals</div>
+                    <div class="tl-ttl">Authentic Vegetarian Dining</div>
+                    <div class="tl-txt">Enjoy freshly prepared vegetarian meals included in your package,
+                        served at your hotel or during the boat tour.</div>
+                </div>
+            </div>
+            <div class="tl-item rv d1">
+                <div class="tl-ic"><i class="bi bi-emoji-smile-fill"></i></div>
+                <div class="tl-card">
+                    <div class="tl-time">Step 6 · Departure</div>
+                    <div class="tl-ttl">Comfortable Drop-Off</div>
+                    <div class="tl-txt">We drop you back to the railway station in time for your onward journey
+                        — with 24×7 support throughout your entire stay.</div>
                 </div>
             </div>
         </div>
@@ -3204,7 +3797,7 @@
                 <div class="fdr-soc">
                     <a href="https://wa.me/917024487353" target="_blank" class="fdr-sb"><i
                             class="bi bi-whatsapp"></i></a>
-                    <a href="https://instagram.com/shashwat_s92" target="_blank" class="fdr-sb"><i
+                    <a href="https://instagram.com/dev_yashh" target="_blank" class="fdr-sb"><i
                             class="bi bi-instagram"></i></a>
                 </div>
             </div>
@@ -3398,7 +3991,7 @@
                 <div class="ft-soc">
                     <a href="https://wa.me/919302720332" class="ft-sc"><i class="bi bi-whatsapp"></i></a>
                     <a href="https://instagram.com/dharmendrasen4587" class="ft-sc"><i class="bi bi-instagram"></i></a>
-                    <a href="https://instagram.com/shashwat_s92" class="ft-sc"><i class="bi bi-instagram"></i></a>
+                    <a href="https://instagram.com/dev_yashh" class="ft-sc"><i class="bi bi-instagram"></i></a>
                 </div>
             </div>
             <div class="ft-col">
@@ -3406,6 +3999,7 @@
                 <a href="#"><i class="bi bi-chevron-right"></i> Home</a>
                 <a href="#packages"><i class="bi bi-chevron-right"></i> Tour Packages</a>
                 <a href="#places"><i class="bi bi-chevron-right"></i> Places to Visit</a>
+                <a href="#gallery"><i class="bi bi-chevron-right"></i> Gallery</a>
                 <a href="#boat"><i class="bi bi-chevron-right"></i> Boat Tours</a>
                 <a href="#celebration"><i class="bi bi-chevron-right"></i> Celebrations</a>
                 <a href="#guide"><i class="bi bi-chevron-right"></i> Tour Guides</a>
@@ -3456,13 +4050,29 @@
         window.addEventListener('load', () => { setTimeout(() => { const l = document.getElementById('loader'); l.style.opacity = '0'; setTimeout(() => l.style.display = 'none', 700); }, 2400); });
 
         /* NAV SCROLL */
-        const nav = document.getElementById('nav');
+        const siteHeader = document.getElementById('siteHeader');
         const pgb = document.getElementById('pgbar');
         window.addEventListener('scroll', () => {
-            nav.classList.toggle('stuck', window.scrollY > 60);
+            const scrolled = window.scrollY > 60;
+            siteHeader.classList.toggle('scrolled', scrolled);
             const t = document.documentElement.scrollTop, h = document.documentElement.scrollHeight - window.innerHeight;
             pgb.style.width = (t / h * 100) + '%';
         }, { passive: true });
+
+        /* LANGUAGE SWITCH — EN / HI. Persists choice, swaps text + HTML nodes. */
+        function setLang(lang) {
+            document.querySelectorAll('[data-en]').forEach(el => { el.textContent = el.dataset[lang] || el.dataset.en; });
+            document.querySelectorAll('[data-en-html]').forEach(el => { el.innerHTML = el.dataset[lang + 'Html'] || el.dataset.enHtml; });
+            document.getElementById('langEn').classList.toggle('on', lang === 'en');
+            document.getElementById('langHi').classList.toggle('on', lang === 'hi');
+            document.documentElement.setAttribute('lang', lang === 'hi' ? 'hi' : 'en');
+            try { localStorage.setItem('cdt-lang', lang); } catch (e) { }
+        }
+        (function () {
+            let saved = 'en';
+            try { saved = localStorage.getItem('cdt-lang') || 'en'; } catch (e) { }
+            if (saved === 'hi') setLang('hi');
+        })();
 
         /* HAMBURGER */
         const ham = document.getElementById('ham');
@@ -3498,6 +4108,49 @@
                 if (!was) it.classList.add('on');
             });
         });
+
+        /* GALLERY FILTER */
+        const galBtns = document.querySelectorAll('.gal-f');
+        const galItems = document.querySelectorAll('.gal-item');
+        galBtns.forEach(b => {
+            b.addEventListener('click', () => {
+                galBtns.forEach(x => { x.classList.remove('on'); x.setAttribute('aria-selected', 'false'); });
+                b.classList.add('on'); b.setAttribute('aria-selected', 'true');
+                const f = b.dataset.f;
+                galItems.forEach(it => it.classList.toggle('hide', f !== 'all' && it.dataset.cat !== f));
+            });
+        });
+
+        /* CURSOR GLOW — desktop pointer only, respects reduced motion */
+        const prefersReduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+        const curglow = document.getElementById('curglow');
+        if (window.matchMedia('(pointer:fine)').matches && !prefersReduced) {
+            document.body.classList.add('has-cursor');
+            window.addEventListener('pointermove', e => {
+                curglow.style.transform = `translate(${e.clientX}px, ${e.clientY}px) translate(-50%,-50%)`;
+            }, { passive: true });
+        }
+
+        /* MAGNETIC BUTTONS — subtle pull toward cursor on hover */
+        if (window.matchMedia('(pointer:fine)').matches && !prefersReduced) {
+            document.querySelectorAll('.btn').forEach(btn => {
+                btn.addEventListener('mousemove', e => {
+                    const r = btn.getBoundingClientRect();
+                    const x = e.clientX - r.left - r.width / 2, y = e.clientY - r.top - r.height / 2;
+                    btn.style.transform = `translate(${x * .18}px, ${y * .35}px)`;
+                });
+                btn.addEventListener('mouseleave', () => { btn.style.transform = ''; });
+            });
+        }
+
+        /* HERO MOUSE PARALLAX */
+        const heroOrb = document.querySelector('.hero-orb');
+        if (heroOrb && !prefersReduced) {
+            document.querySelector('.hero').addEventListener('mousemove', e => {
+                const x = (e.clientX / window.innerWidth - .5) * 30, y = (e.clientY / window.innerHeight - .5) * 30;
+                heroOrb.style.transform = `translate(calc(-50% + ${x}px), calc(-50% + ${y}px))`;
+            }, { passive: true });
+        }
 
         /* SLIDER */
         const si = document.getElementById('si');
@@ -3547,6 +4200,18 @@
             });
         }
         load();
+    </script>
+
+    <!-- LENIS SMOOTH SCROLL (progressive enhancement — page works fully without it) -->
+    <script src="https://cdn.jsdelivr.net/npm/lenis@1.1.14/dist/lenis.min.js" defer></script>
+    <script defer>
+        window.addEventListener('load', () => {
+            if (typeof Lenis === 'undefined') return;
+            if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+            const lenis = new Lenis({ duration: 1.1, smoothWheel: true });
+            function raf(t) { lenis.raf(t); requestAnimationFrame(raf); }
+            requestAnimationFrame(raf);
+        });
     </script>
 </body>
 
